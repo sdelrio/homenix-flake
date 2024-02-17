@@ -68,9 +68,8 @@
       devNodes = "/dev/disk/by-id/";
       bootDevices = [ "virtio-abcdef0123456789" ];
 
-      immutable.enable = false;
+      immutable = false;
       removableEfi = true;
-      luks.enable = false;
     };
   };
 
