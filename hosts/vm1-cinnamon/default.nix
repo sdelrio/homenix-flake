@@ -70,7 +70,6 @@
 
       immutable = false;
       removableEfi = true;
-      luks.enable = false;
     };
   };
 

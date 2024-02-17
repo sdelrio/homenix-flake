@@ -1,6 +1,8 @@
 # configuration in this file is shared by all hosts
 
-{ pkgs, ... }: {
+{ pkgs, pkgs-unstable, inputs,... }:
+let inherit (inputs) self;
+in {
   # Enable NetworkManager for wireless networking,
   # You can configure networking with "nmtui" command.
   networking.useDHCP = true;
@@ -59,7 +61,6 @@
 
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
-<<<<<<< HEAD
       #mg # emacs-like editor
       jq # other programs
     ;
@@ -67,20 +68,14 @@
 
   # Safety mechanism: refuse to build unless everything is
   # tracked by git
-  system.configurationRevision = if (self ? rev) then
-    self.rev
-  else
-    throw "refuse to build: git tree is dirty";
+  #system.configurationRevision = if (self ? rev) then
+  #  self.rev
+  #else
+  #  throw "refuse to build: git tree is dirty";
 
   system.stateVersion = "23.11";
 
   # let nix commands follow system nixpkgs revision
-  # nix.registry.nixpkgs.flake = inputs.nixpkgs;
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
 
-  environment.systemPackages = builtins.attrValues {
-    inherit (pkgs)
-      mg # emacs-like editor
-      jq # other programs
-    ;
-  };
 }

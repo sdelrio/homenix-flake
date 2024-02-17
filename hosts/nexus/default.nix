@@ -5,7 +5,7 @@
 # all others goes to `configuration.nix` under the same directory as
 # this file.
 
-{ config, pkgs, lib, inputs, modulesPath, ... }: {
+{ config, pkgs, libs, inputs, modulesPath, ... }: {
 
   programs.tmux = {
     enable = true;
@@ -70,7 +70,11 @@
 
       immutable = false;
       removableEfi = true;
-      luks.enable = false;
+      sshUnlock = {
+        # read sshUnlock.txt file.
+        enable = false;
+        authorizedKeys = [ ];
+      };
     };
   };
 
@@ -126,7 +130,7 @@
     ## Keyboard-driven layer for GNOME Shell
     # gnomeExtensions.pop-shell
     gpa
-    lutris
+    # lutris  # depends on steam
     lm_sensors
     lshw
     onlyoffice-bin_latest
@@ -135,9 +139,9 @@
     syncthing
     syncthing-tray
     solaar
+    # steam
     telegram-desktop
     terminator
-    # steam
     virt-manager
     vscode
     zsh

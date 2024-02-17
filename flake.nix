@@ -1,65 +1,66 @@
 {
+  description = "Barebones NixOs with ZFS option";
+
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-23.11";
-    #nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
     home-manager = {
       url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, home-manager }:
+  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager }@inputs:
     let
       mkHost = hostName: system:
-        (({ zfs-root, pkgs, system, ... }:
           nixpkgs.lib.nixosSystem {
-            inherit system;
+	    pkgs = import nixpkgs {
+              inherit system;
+	      config = { allowUnfree = true; };
+	    };
+
+	    specialArgs = {
+              # By default, the system will only use packages from the
+              # stable channel.  You can selectively install packages
+              # from the unstable channel.  You can also add more
+              # channels to pin package version.
+              pkgs-unstable = import nixpkgs-unstable {
+                inherit system;
+                # settings to nixpkgs-unstable goes to here
+              };
+
+              # make all inputs availabe in other nix files
+              inherit inputs;
+	    };
+	    
             modules = [
               # Module 0: zfs-root
               ./modules
 
               # Module 1: host-specific config, if exist
-              (if (builtins.pathExists
-                ./hosts/${hostName}/configuration.nix) then
-                (import ./hosts/${hostName}/configuration.nix { inherit pkgs; })
-              else
-                { })
+              #(if (builtins.pathExists ./hosts/${hostName}/configuration.nix) then
+              #  ./hosts/${hostName}/configuration.nix 
+              #else
+              #  { })
 
               # Module 2: entry point
-              (({ zfs-root, pkgs, lib, ... }: {
-                inherit zfs-root;
-                system.configurationRevision = if (self ? rev) then
-                  self.rev
-                else
-                  throw "refuse to build: git tree is dirty";
-                system.stateVersion = "23.05";
-                imports = [
-                  "${nixpkgs}/nixos/modules/installer/scan/not-detected.nix"
-                  # "${nixpkgs}/nixos/modules/profiles/hardened.nix"
-                  # "${nixpkgs}/nixos/modules/profiles/qemu-guest.nix"
-                ];
-              }) {
-                inherit zfs-root pkgs;
-                lib = nixpkgs.lib;
-              })
-
-              # Module 3: home-manager
-              home-manager.nixosModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-              }
 
               # Module 4: config shared by all hosts
-              (import ./configuration.nix { inherit pkgs; })
-            ];
-          })
+              ./configuration.nix
 
-        # configuration input
-          (import ./hosts/${hostName} {
-            system = system;
-            pkgs = nixpkgs.legacyPackages.${system};
-          }));
+              # configuration input
+              ./hosts/${hostName}
+
+              # Module 3: home-manager
+              #home-manager.nixosModules.home-manager
+              #{
+              #  home-manager.useGlobalPkgs = true;
+              #  home-manager.useUserPackages = true;
+              #  #home-manager.users.sdelrio = import ./home.nix;
+              #}
+            ];
+          };
+
     in {
       nixosConfigurations = {
         exampleHost = mkHost "exampleHost" "x86_64-linux";
