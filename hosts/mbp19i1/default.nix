@@ -18,6 +18,7 @@
 
   homebrew = {
     casks = [
+      "alt-tab"
       "discord"
       "iterm2"
       "onlyoffice"
@@ -53,7 +54,7 @@
 
   # The platform the configuration will be used on.
   nixpkgs.hostPlatform = pkgs.system;  #  (x86_64-darwin or aarm64-darwin)
- 
+
   environment.variables = {
     EDITOR = "nvim";
   };
