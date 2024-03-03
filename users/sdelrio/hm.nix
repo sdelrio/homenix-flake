@@ -2,6 +2,10 @@
 
 {
 
+  home.packages = with pkgs; lib.mkAfter [
+    gh
+  ];
+
   programs.git = {
     enable = true;
     userName = "sdelrio";

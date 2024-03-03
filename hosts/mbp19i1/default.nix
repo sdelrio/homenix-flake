@@ -18,6 +18,7 @@
 #    syncthing
 #    syncthing-tray
 #    syncthingtray
+    vscode
   ];
 
 
@@ -29,10 +30,11 @@
       "onlyoffice"
       "plex-media-player"
       "telegram-desktop"
-      "visual-studio-code"
+#      "visual-studio-code"
       "vlc"
     ];
   };
+
 
 #  programs.iterm2 = { # https://sr.ht/~cfeeley/dotfiles/#homepage
 #    enableZshIntegration = true;  # Default: stdenv.isDarwin && config.programs.zsh.enable

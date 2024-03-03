@@ -1,5 +1,5 @@
 # https://github.com/zmre/mac-nix-simple-example/blob/master/flake.nix
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 let
   sources = import ./nix/sources.nix;
 in
@@ -7,12 +7,13 @@ in
   # Don't change this when you change package input. Leave it alone.
   home.stateVersion = "23.11";
   # specify my home-manager configs
-  home.packages = with pkgs; [
+  home.packages = with pkgs; lib.mkBefore [
     curl
     fd # fd is an unnamed dependency of fzf
     less
     niv
     ripgrep
+    tig
   ];
   home.sessionVariables = {
     PAGER = "less";
@@ -41,8 +42,44 @@ in
   programs.starship.enable = true;
   programs.starship.enableZshIntegration = true;
 
+  programs.vscode = {
+      enable = true;
+      package = pkgs.vscode;
+      extensions = with pkgs.vscode-extensions; [
+        amazonwebservices.aws-toolkit-vscode
+        bierner.markdown-mermaid
+        bbenoist.nix
+        eamodio.gitlens
+        # huntertran.auto-markdown-toc
+        golang.go
+        # jinliming2.vscode-go-template
+        justusadam.language-haskell
+        ms-azuretools.vscode-docker
+        ms-kubernetes-tools.vscode-kubernetes-tools
+        ms-vscode-remote.remote-containers
+        # ms-vscode-remote.remote-ssh
+        # ms-vscode-remote.remote-ssh-edit
+        # ms-vscode-remote.vscode-remote-extensionpack
+        ms-vscode.makefile-tools
+        # ms-vscode.remote-explorer
+        # ms-vscode.remote-server
+        oderwat.indent-rainbow
+        # redhat.vscode-tekton-pipelines
+        redhat.vscode-yaml
+        shardulm94.trailing-spaces
+        shd101wyy.markdown-preview-enhanced
+        vscodevim.vim
+      ];
+      # Default fontFamily: Menlo, Monaco, 'Courier New', monospace
+      userSettings = {
+          "terminal.integrated.fontFamily" = "'MesloLGSDZ Nerd Font Mono'";
+          "editor.fontSize" = 20;
+          "editor.fontFamily" = "'MesloLGSDZ Nerd Font Mono', Menlo, Monaco, 'Courier New', monospace";
+      };
+  };
+
   # dotfiles:
-  home.file = {
+  home.file = lib.mkBefore {
     ".inputrc".source = ./dotfiles/inputrc;
     ".tigrc".source = ./dotfiles/tigrc;
   };
@@ -64,4 +101,5 @@ in
       source = sources.astronvim;
     };
   };
+
 }

@@ -1,6 +1,6 @@
 # Niv 
 
-[niv](https://github.com/nmattia/niv is a painless dependencies for nix project 
+[niv](https://github.com/nmattia/niv) is a painless dependencies for nix project 
 
 
 ## Init
