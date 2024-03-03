@@ -1,5 +1,5 @@
 {
-  description = "Barebones NixOs with ZFS option";
+  description = "Barebones NixOs with Linux ZFS, Darwin options";
 
   inputs = {
     # Where we get most of our software. Giant monorepo with recipes
@@ -72,13 +72,13 @@
       mkMac = hostName: system: myUser:
           nix-darwin.lib.darwinSystem {
 	    pkgs = import nixpkgs {
-              inherit system; # Makes system = system (x86_64-darwin or aarch64-darwin)
+        inherit system; # Makes system = system (x86_64-darwin or aarch64-darwin)
 	      config = { allowUnfree = true; };
 	    };
 
             modules = [
 
-	      ./modules/darwin
+	            ./modules/darwin
 
               # configuration input
               ./hosts/${hostName}
@@ -93,10 +93,11 @@
                 home-manager = {
                   useGlobalPkgs = true;
                   useUserPackages = true;
-		  users.${myUser}.imports = [
-		    ./modules/home-manager
-		    ./users/${myUser}/hm.nix
-		  ];
+		              users.${myUser}.imports = [
+		                ./modules/home-manager
+		                ./users/${myUser}/hm.nix
+                    #./hosts/${hostName}/hm.nix
+		              ];
                 };
               }
             ];
@@ -110,7 +111,7 @@
         vm1-terminal = mkHost "vm1-terminal" "x86_64-linux";
       };
       darwinConfigurations = {
-	mbp19i1 = mkMac "mbp19i1" "x86_64-darwin" "sdelrio";
+  	    mbp19i1 = mkMac "mbp19i1" "x86_64-darwin" "sdelrio";
       };
     };
 }

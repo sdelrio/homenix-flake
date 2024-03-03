@@ -47,15 +47,18 @@ in
     ".tigrc".source = ./dotfiles/tigrc;
   };
 
-#  xdg.dataFile = {
-#    "oh-my-zsh".source = sources.oh-my-zsh;
-#  };
+  xdg.dataFile = {
+    "oh-my-zsh".source = sources.oh-my-zsh;
+  };
 
   xdg.configFile = {
-    astronvim = { # https://github.com/maxbrunet/dotfiles/blob/main/nix/home.nix
+    # https://github.com/maxbrunet/dotfiles/blob/main/nix/home.nix
+    astronvim = {
       onChange = "PATH=$PATH:${pkgs.git}/bin ${pkgs.neovim}/bin/nvim --headless +quitall";
       source = ./.config/astronvim;
     };
+
+    # https://github.com/maxbrunet/dotfiles/blob/main/nix/home.nix
     nvim = {
       onChange = "PATH=$PATH:${pkgs.git}/bin ${pkgs.neovim}/bin/nvim --headless +quitall";
       source = sources.astronvim;
