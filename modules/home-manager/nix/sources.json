@@ -10,5 +10,17 @@
         "type": "tarball",
         "url": "https://github.com/AstroNvim/AstroNvim/archive/d36af2f75369e3621312c87bd0e377e7d562fc72.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+    },
+    "oh-my-zsh": {
+        "branch": "master",
+        "description": "🙃   A delightful community-driven (with 2,200+ contributors) framework for managing your zsh configuration. Includes 300+ optional plugins (rails, git, macOS, hub, docker, homebrew, node, php, python, etc), 140+ themes to spice up your morning, and an auto-update tool so that makes it easy to keep up with the latest updates from the community.",
+        "homepage": "https://ohmyz.sh",
+        "owner": "ohmyzsh",
+        "repo": "ohmyzsh",
+        "rev": "458fc2e1df4757e64b036edee17ccdefdde41f73",
+        "sha256": "1vn8ay1ilbmv8a3hpyq6mbmypc74mjcvwn64h8wg7y6p1bjyi2rz",
+        "type": "tarball",
+        "url": "https://github.com/ohmyzsh/ohmyzsh/archive/458fc2e1df4757e64b036edee17ccdefdde41f73.tar.gz",
+        "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

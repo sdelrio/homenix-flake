@@ -4,6 +4,11 @@
 
   time.timeZone = lib.mkDefault "Europe/Madrid";
 
+  fonts.fontDir.enable = true; # DANGER only use if all fonts are managed here
+  fonts.fonts = [ (pkgs.nerdfonts.override { fonts = [
+    "Meslo"
+  ]; }) ];
+
   environment.systemPackages = with pkgs; [
     cookiecutter
     coreutils
@@ -28,6 +33,11 @@
       "vlc"
     ];
   };
+
+#  programs.iterm2 = { # https://sr.ht/~cfeeley/dotfiles/#homepage
+#    enableZshIntegration = true;  # Default: stdenv.isDarwin && config.programs.zsh.enable
+#  }
+
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
   # nix.package = pkgs.nix;

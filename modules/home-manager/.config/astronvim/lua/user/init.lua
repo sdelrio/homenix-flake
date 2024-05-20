@@ -136,14 +136,14 @@ return {
 
   polish = function()
     vim.api.nvim_create_autocmd("FileType", {
-      desc = "Highlight lines over 80 characters long",
+      desc = "Highlight lines over 90 characters long",
       callback = function()
         if vim.bo.filetype == "alpha" then
           return
         end
         vim.cmd([[
           highlight ColorColumn ctermbg=DarkRed guibg=DarkRed
-          call matchadd('ColorColumn', '\%81v', 100)
+          call matchadd('ColorColumn', '\%91v', 100)
         ]])
       end,
     })
