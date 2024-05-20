@@ -16,18 +16,30 @@
       url = "github:nix-community/home-manager/release-23.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Secrets management. See https://github.com/EmergentMind/nix-config/blob/dev/docs/secretsmgmt.md
+    sops-nix = {
+      url = "github:mic92/sops-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, nix-darwin, home-manager }@inputs:
+  outputs = { self,
+              nixpkgs,
+              nixpkgs-unstable,
+              nix-darwin,
+              home-manager,
+              sops-nix,
+              ... } @inputs:
     let
       mkHost = hostName: system:
         nixpkgs.lib.nixosSystem {
-	        pkgs = import nixpkgs {
+          pkgs = import nixpkgs {
           inherit system;
-	        config = { allowUnfree = true; };
-	      };
+          config = { allowUnfree = true; };
+        };
 
-	      specialArgs = {
+        specialArgs = {
           # By default, the system will only use packages from the
           # stable channel.  You can selectively install packages
           # from the unstable channel.  You can also add more
@@ -71,16 +83,32 @@
 
       mkMac = hostName: system: myUser:
         nix-darwin.lib.darwinSystem {
-	        pkgs = import nixpkgs {
+          pkgs = import nixpkgs {
             inherit system; # Makes system = system (x86_64-darwin or aarch64-darwin)
-	          config = { allowUnfree = true; };
-	        };
+            config = { allowUnfree = true; };
+          };
+
+          specialArgs = {
+            # By default, the system will only use packages from the
+            # stable channel.  You can selectively install packages
+            # from the unstable channel.  You can also add more
+            # channels to pin package version.
+            pkgs-unstable = import nixpkgs-unstable {
+              inherit system;
+              # settings to nixpkgs-unstable goes to here
+            };
+
+            # make all inputs availabe in other nix files
+            inherit inputs;
+          };
 
           modules = [
-
+            # Generic Darwin module configuration for all hosts
 	          ./modules/darwin
-
             # configuration input
+            #inputs.sops-nix.nixosModules.sops
+            #./hosts/common/core/sops.nix
+            # Host configuration modules
             ./hosts/${hostName}
 
             # Module home-manager
@@ -93,11 +121,12 @@
               home-manager = {
                 useGlobalPkgs = true;
                 useUserPackages = true;
-		            users.${myUser}.imports = [
-		              ./modules/home-manager
-		              ./users/${myUser}/hm.nix
+                users.${myUser}.imports = [
+                  inputs.sops-nix.homeManagerModules.sops
+                  ./modules/home-manager
                   ./hosts/${hostName}/hm.nix
-		            ];
+                  ./users/${myUser}/hm.nix
+                ];
               };
             }
           ];
@@ -112,6 +141,7 @@
       };
       darwinConfigurations = {
   	    mbp19i1 = mkMac "mbp19i1" "x86_64-darwin" "sdelrio";
+        delrioms-KVNV5T = mkMac "delrioms-KVNV5T" "aarch64-darwin" "delrioms";
       };
     };
 }

@@ -116,22 +116,28 @@ return {
 
   lsp = {
     servers = {
-      "bashls",
-      "cssls",
-      "eslint",
-      "gopls",
-      "html",
-      "jsonls",
-      "jsonnet_ls",
-      "nixd",
-      "pylsp",
-      "rnix",
-      "ruff_lsp",
-      "rust_analyzer",
-      "terraformls",
-      "tsserver",
-      "yamlls",
+--      "helm-ls",
+--      "gopls",
+--      "lua-language-server",
+--      "rnix-lsp",
     },
+    -- servers = {
+    --   "bashls",
+    --   "cssls",
+    --   "eslint",
+    --   "gopls",
+    --   "html",
+    --   "jsonls",
+    --   "jsonnet_ls",
+    --   "nixd",
+    --   "pylsp",
+    --   "rnix",
+    --   "ruff_lsp",
+    --   "rust_analyzer",
+    --   "terraformls",
+    --   "tsserver",
+    --   "yamlls",
+    -- },
     formatting = {
       disabled = {
         -- use null-ls' prettier instead

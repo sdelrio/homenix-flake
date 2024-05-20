@@ -52,6 +52,25 @@ in {
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
+  # nix.linux-builder = {
+  #   enable = true;
+  #
+  #   ephemeral = true;
+  #   maxJobs = 4;
+  #   config = {
+  #     virtualisation = {
+  #       darwin-builder = {
+  #         diskSize = 40 * 1024;
+  #         memorySize = 8 * 1024;
+  #       };
+  #       cores = 6;
+  #     };
+  #   };
+  # };
+  #
+  # # This line is a prerequisite
+  # nix.trusted-users = [ "@admin" ];
+
   programs.git.enable = true;
 
   security = {
