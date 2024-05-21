@@ -1,6 +1,8 @@
 # configuration in this file is shared by all hosts
 
-{ pkgs, ... }: {
+{ pkgs, pkgs-unstable, inputs,... }:
+let inherit (inputs) self;
+in {
   # Enable NetworkManager for wireless networking,
   # You can configure networking with "nmtui" command.
   networking.useDHCP = true;
@@ -8,8 +10,10 @@
 
   users.users = {
     root = {
-      initialHashedPassword = "rootHash_placeholder";
-      openssh.authorizedKeys.keys = [ "sshKey_placeholder" ];
+      initialPassword = "changeme";
+      openssh.authorizedKeys.keys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILGTsI9Q7a92VGc8QGdTdWxCx1J0W05iYVnkH5Xz4nBm"
+      ];
     };
   };
 
@@ -57,8 +61,21 @@
 
   environment.systemPackages = builtins.attrValues {
     inherit (pkgs)
-      mg # emacs-like editor
+      #mg # emacs-like editor
       jq # other programs
     ;
   };
+
+  # Safety mechanism: refuse to build unless everything is
+  # tracked by git
+  #system.configurationRevision = if (self ? rev) then
+  #  self.rev
+  #else
+  #  throw "refuse to build: git tree is dirty";
+
+  system.stateVersion = "23.11";
+
+  # let nix commands follow system nixpkgs revision
+  nix.registry.nixpkgs.flake = inputs.nixpkgs;
+
 }
